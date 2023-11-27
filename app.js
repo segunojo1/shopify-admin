@@ -79,17 +79,34 @@ document.addEventListener('click', (event) => {
   if (clickedElement === profile || profile.contains(clickedElement)) {
     togglePopup(popup, profile);
     closePopup(notifPopup);
+    console.log('profile clicked');
     lastOpenedMenu = profile;
   } else if (clickedElement === notifications || notifications.contains(clickedElement)) {
     togglePopup(notifPopup, notifications);
     closePopup(popup);
+    console.log('notif clicked');
     lastOpenedMenu = notifications;
   } else {
     closePopup(popup);
     closePopup(notifPopup);
+    // console.log(event);
+    console.log('none of them clicked');
     lastOpenedMenu = null;
   }
 });
+
+// document.addEventListener('keyup', (e) => {
+//   const codee = e.key;
+
+//   if (codee == 'Tab') {
+//     menuItems.forEach(men => {
+//       men.onblur(() => closePopup(popup))
+//     })
+//     if (popup) {
+//       console.log;
+//     }
+//   }
+// })
 
 const menus = document.querySelector('.right_nav');
 menus.addEventListener('keydown', (event) => {
@@ -145,37 +162,43 @@ menus.addEventListener('keydown', (event) => {
   }
 });
 
-const togglePopup = (popup, triggerElement) => {
-  const isOpen = popup.classList.toggle("active_popup");
+const togglePopup = (popupp, triggerElement) => {
+  const isOpen = popupp.classList.toggle("active_popup");
 
   triggerElement.setAttribute("aria-expanded", isOpen ? "true" : "false");
 
-  if (isOpen) {
-    menuItems = popup.querySelectorAll('[role="menuitem"]');
-    if (menuItems) {
-      menuItems.item(1).focus();
+  if (popupp == popup) {
+    if (isOpen) {
+      menuItems = popupp.querySelectorAll('[role="menuitem"]');
+      if (menuItems) {
+        menuItems.item(1).focus();
+      }
+  
+      menuItems.forEach((item, index) => {
+        item.addEventListener('keydown', (e) => handleKeyPress(e, index))
+      })
     }
-
-    menuItems.forEach((item, index) => {
-      item.addEventListener('keydown', (e) => handleKeyPress(e, index))
-    })
+  };
   }
-};
 
 const closePopup = (popup) => {
   popup.classList.remove("active_popup");
+  console.log(popup);
 };
 
 //keyboad accessibility within the menu
 const handleKeyPress = (e, index) => {
-  const isFirstItem = index === 0;
+  const isFirstItem = index === 1;
   const isLastItem = index === menuItems.length - 1;
-  const nextItem = menuItems.item(index + 1);
-  const prevItem = menuItems.item(index - 1);
+  let nextItem = menuItems.item(index + 1);
+  let prevItem = menuItems.item(index - 1);
   if (e.key == 'ArrowRight' || e.key == "ArrowDown") {
     if (isLastItem) {
-      menuItems.item(0).focus();
+      menuItems.item(1).focus();
       return;
+    }
+    if (index == 6) {
+      nextItem = menuItems.item(index + 2);
     }
     console.log(nextItem);
     nextItem.focus();
@@ -183,6 +206,9 @@ const handleKeyPress = (e, index) => {
     if (isFirstItem) {
       menuItems.item(menuItems.length - 1).focus();
       return;
+    }
+    if (index == 8) {
+      prevItem = menuItems.item(index - 2);
     }
     prevItem.focus();
   }
@@ -300,6 +326,22 @@ dropDownIcon.addEventListener("click", () => {
     console.log("now collapsed");
   }
 })
+
+dropDownIcon.addEventListener("keyup", (e) => {
+  const keyCode = e.key;
+
+  if (keyCode === 'Enter' || keyCode === ' ') {
+  dropDownIcon.classList.toggle("accord_drop_active")
+  dropDownContent.classList.toggle("accord_list_active");
+  if (dropDownIcon.ariaExpanded == 'false') {
+    dropDownIcon.ariaExpanded = 'true';
+    console.log("now expanded");
+  } else {
+    dropDownIcon.ariaExpanded = 'false';
+    console.log("now collapsed");
+  }
+}
+})
 const checkIcon = document.querySelectorAll(".accord_check");
 
 const progressText = document.querySelector(".accord_progress p");
@@ -330,99 +372,177 @@ titleCheck.forEach(pa => {
 })
 
 let completedCount = 0;
+const uncompletedCheck = document.querySelectorAll(".uncompleted-check");
+const loadingCheck = document.querySelectorAll(".loading-check");
+const completedCheck = document.querySelectorAll(".completed-check");
+const shoppingStatus  = document.querySelectorAll("#shopping-status");
 checkIcon.forEach((check, i) => {
   
   check.addEventListener('click', (e) => {
-    const currentChecked = check.getAttribute('aria-checked');
-    newChecked = currentChecked === 'true' ? 'false' : 'true';
-    check.setAttribute('aria-checked', newChecked);
-    const grandParent = e.target.parentNode.parentNode;
-    //  check.parentNode.parentNode.classList.remove("list__active");
+
+    const grandParent = check.parentNode.parentNode;
+    
     let checkedIndex = i + 1;
     console.log(checkedIndex);
-    const nextParent = parentCheck[checkedIndex];
+    let nextParent = parentCheck[checkedIndex];
     
     console.log();
-    // parentCheck[checkedIndex].classList.add("list__active");
-    // parentCheck[checkedIndex].classList.remove("accord_list_list");
-    // parentCheck[checkedIndex].click();
-    if (newChecked == 'false') {
-      console.log("not checked oo");
-      checkIcon.forEach((checkk, i) => {
-        if (checkk != check) {
-          checkk.parentNode.parentNode.classList.remove("list__active");
-          checkk.parentNode.parentNode.classList.add("accord_list_list");
-          checkk.nextElementSibling.firstElementChild.setAttribute('aria-expanded', 'false');
-        }
-      })
-      grandParent.classList.toggle("list__active");
-      grandParent.classList.toggle("accord_list_list");
-      check.nextElementSibling.firstElementChild.setAttribute('aria-expanded', 'true');
-    }else{
-      // checkIcon.forEach((checkk, i) => {
-      //   if (checkk != check) {
-      //     checkk.parentNode.parentNode.classList.remove("list__active");
-      //     checkk.parentNode.parentNode.classList.add("accord_list_list");
-      //   }
-      // })
-      if (checkedIndex < 5) {
+    const checkIfButtonIsNotChecked = () => {
+
+      if (newChecked == 'false') {
+        console.log("not checked oo");
         checkIcon.forEach((checkk, i) => {
-          if (checkk.parentNode.parentNode != nextParent) {
+          if (checkk != check) {
             checkk.parentNode.parentNode.classList.remove("list__active");
             checkk.parentNode.parentNode.classList.add("accord_list_list");
             checkk.nextElementSibling.firstElementChild.setAttribute('aria-expanded', 'false');
           }
         })
-        // grandParent.classList.remove("list__active");
-        // grandParent.classList.add("accord_list_list");
-        // check.nextElementSibling.firstElementChild.setAttribute('aria-expanded', 'false');
-        console.log("i'm toggling oo");
-        nextParent.classList.toggle('list__active');
-        nextParent.classList.toggle('accord_list_list');
-       nextParent.childNodes[1].childNodes[3].firstElementChild.setAttribute("aria-expanded", 'true')
+        grandParent.classList.toggle("list__active");
+        grandParent.classList.toggle("accord_list_list");
+        check.nextElementSibling.firstElementChild.setAttribute('aria-expanded', 'true');
       }else{
-        grandParent.classList.remove("list__active");
-        grandParent.classList.add("accord_list_list");
+        
+        if (checkedIndex < 5) {
+          checkIcon.forEach((checkk, i) => {
+            if (checkk.parentNode.parentNode != nextParent) {
+              checkk.parentNode.parentNode.classList.remove("list__active");
+              checkk.parentNode.parentNode.classList.add("accord_list_list");
+              checkk.nextElementSibling.firstElementChild.setAttribute('aria-expanded', 'false');
+            }
+          })
+          
+          console.log("i'm toggling oo");
+          console.log(nextParent.childNodes[1].childNodes[3])
+          for (let index = 0; index < 5; index++) {
+            if (nextParent.childNodes[1].childNodes[3].classList.contains("done-check")) {
+              if (checkedIndex >= 5) {
+                checkedIndex = 0;
+                console.log('equal/greater than 5');
+              }
+              checkedIndex++;
+              nextParent = parentCheck[checkedIndex];
+              console.log('hi');
+            }else{
+              break;
+            }
+          }
+          nextParent.classList.toggle('list__active');
+          nextParent.classList.toggle('accord_list_list');
+         nextParent.childNodes[1].childNodes[3].firstElementChild.setAttribute("aria-expanded", 'true')
+        }else{
+          grandParent.classList.remove("list__active");
+          grandParent.classList.add("accord_list_list");
+        }
       }
     }
 
-
-    if (newChecked === 'true') {
-      completedCount++;
-    } else {
-      completedCount--;
+    const handleDoneCheck = () => {
+      uncompletedCheck.forEach(chec => {
+        if(chec.parentNode == check)
+        {
+          console.log(chec.parentNode);
+          chec.classList.add("check-hidden");
+        }
+      })
+      loadingCheck.forEach(chec => {
+        if(chec.parentNode == check)
+        {
+          chec.classList.remove("check-hidden");
+        }
+      })
+        console.log('done');
+        shoppingStatus.ariaLabel = "Loading, please wait.."
+        setTimeout(() => {
+          loadingCheck.forEach(chec => {
+            if(chec.parentNode == check)
+            {
+              chec.classList.add("check-hidden");
+            }
+          })
+          completedCheck.forEach(chec => {
+            if(chec.parentNode == check)
+            {
+              chec.classList.remove("check-hidden");
+            }
+          })
+          check.classList.add("done-check");
+          check.ariaLabel = check.ariaLabel.replace("as done", "as not done");
+          newChecked = 'true';
+          checkForProgressBar();
+          updateProgress();
+          checkIfButtonIsNotChecked();
+          shoppingStatus.ariaLabel = "Successfully marked customize your online store as done"
+        },1000)
     }
-
-    updateProgress();
-
-    const imgSrc = newChecked === 'true'
-      ? 'https://crushingit.tech/hackathon-assets/icon-checkmark-circle.svg' // Replace with the path to your checked image
-      : 'https://crushingit.tech/hackathon-assets/icon-dashed-circle.svg';
-
-    if (newChecked === 'true') {
-      if (check.classList.contains('accord_check')) {
-        check.classList.remove('accord_check');
+    
+    const handleUndoneCheck = () => {
+      completedCheck.forEach(chec => {
+        if(chec.parentNode == check)
+        {
+          chec.classList.add("check-hidden");
+        }
+      })
+      loadingCheck.forEach(chec => {
+        if(chec.parentNode == check)
+        {
+          chec.classList.remove("check-hidden");
+        }
+      })
+        shoppingStatus.ariaLabel = "Loading, please wait.."
+        console.log('undone');
+        setTimeout(() => {
+          loadingCheck.forEach(chec => {
+            if(chec.parentNode == check)
+            {
+              chec.classList.add("check-hidden");
+            }
+          })
+          uncompletedCheck.forEach(chec => {
+            if(chec.parentNode == check)
+            {
+              chec.classList.remove("check-hidden");
+            }
+          })
+          check.classList.remove("done-check");
+          check.ariaLabel = check.ariaLabel.replace("as not done", "as done");
+          newChecked = 'false';
+          checkForProgressBar();
+          updateProgress();
+          checkIfButtonIsNotChecked();
+          shoppingStatus.ariaLabel = "Successfully marked customize your online store as not done"
+        },1000)
       }
-      check.classList.add('accord_check_checked');
-    } else {
-      check.classList.add('accord_check');
-      check.classList.remove('accord_check_checked')
+      
+      const handleDoneOrUndone = () => {
+        const markedAsDone = check.classList.contains("done-check");
+        if (markedAsDone) {
+          handleUndoneCheck()
+        }else{
+          handleDoneCheck()
+        }
+      }
+
+    handleDoneOrUndone();
+    const checkForProgressBar = () => {
+      if (newChecked === 'true') {
+        completedCount++;
+      } else {
+        completedCount--;
+      }
     }
 
-    check.src = 'https://crushingit.tech/hackathon-assets/icon-spinner.svg';
-    if (check.src == 'https://crushingit.tech/hackathon-assets/icon-spinner.svg') {
-      check.classList.add('classs');
-    } else {
-      check.classList.remove('classs');
-    }
+    
 
-    setTimeout(() => {
-      check.src = imgSrc;
-      check.classList.remove('classs');
-    }, 400)
+ 
+      
 
   })
 })
+
+
+
+
 
 function updateProgress() {
   const totalItems = checkIcon.length;
