@@ -315,6 +315,12 @@ accordion.forEach(accord => {
   })
 })
 
+const closePlan = document.querySelector(".close_btn");
+const plan = document.querySelector('.plan');
+closePlan.addEventListener('click', () => {
+  plan.classList.add('plan_hidden');
+})
+
 dropDownIcon.addEventListener("click", () => {
   dropDownIcon.classList.toggle("accord_drop_active")
   dropDownContent.classList.toggle("accord_list_active");
