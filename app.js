@@ -547,7 +547,7 @@ checkIcon.forEach((check, i) => {
 })
 
 
-
+window.innerWidth < 720 ? profile.setAttribute('aria-label', 'DC')
 
 
 function updateProgress() {

@@ -507,6 +507,7 @@ line-height: 140%;
   outline: none;
 }
 
+
 .profile:hover,
 .notif:hover {
   background: var(--grey-grey-200, #616161);
