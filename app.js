@@ -3,7 +3,7 @@ const profile = document.querySelector(".profile");
 const notifications = document.querySelector(".notif");
 const notifPopup = document.querySelector(".notif_popup");
 const popup = document.querySelector(".profilee");
-let menuItems, lastOpenedMenu = null;
+let menuItems, lastOpenedMenu = null, focusedItem = false;
 
 //SET ARIA LABEL DEPENDING ON SCREEN SIZE
 window.innerWidth < 720 ? profile.setAttribute('aria-label', 'DC') : profile.setAttribute('aria-label', 'Davi Collections');
@@ -11,14 +11,16 @@ window.innerWidth < 720 ? profile.setAttribute('aria-label', 'DC') : profile.set
 //check if the alert or profile popup was clicked to show respective popups
 document.addEventListener('click', (event) => {
   const clickedElement = event.target;
-//if the profile menu was clicked
+  //if the profile menu was clicked
   if (clickedElement === profile || profile.contains(clickedElement)) {
     togglePopup(popup, profile);
     closePopup(notifPopup);
+    addAnimation(popup);
     lastOpenedMenu = profile;
   } else if (clickedElement === notifications || notifications.contains(clickedElement)) {//if the notiications popup was clicked
     togglePopup(notifPopup, notifications);
     closePopup(popup);
+    addAnimation(notifPopup);
     lastOpenedMenu = notifications;
   } else {//if anywhere on the document was clicked close all open menus
     closePopup(popup);
@@ -27,12 +29,24 @@ document.addEventListener('click', (event) => {
   }
 });
 
+//ADD ANIMATION TO MENU ON SHOW FOR UX
+const addAnimation = (popup) => {
+  if (popup.classList.contains("active_popup")) {
+    popup.style.animation = "expand linear .2s";
+    setTimeout(() => {
+      popup.style.animation = "none";
+    }, 200)
+  } else {
+    popup.style.animation = "none";
+  }
+}
+
 //KEYBOARD ACCESSIBILITY
 //
 const menus = document.querySelector('.right_nav');
 menus.addEventListener('keydown', (event) => {
   const keyCode = event.key;
-
+  console.log(event);
   // Check if the Enter key is pressed when any of the menu is open
   if (keyCode === 'Enter' || keyCode === ' ') {
     console.log(event);
@@ -40,6 +54,7 @@ menus.addEventListener('keydown', (event) => {
     if (document.activeElement === profile) {
       togglePopup(popup, profile);
       closePopup(notifPopup);
+      console.log('enter');
       lastOpenedMenu = profile;
     } else if (document.activeElement === notifications) {//if the notifications menu is active
       togglePopup(notifPopup, notifications);
@@ -52,36 +67,7 @@ menus.addEventListener('keydown', (event) => {
     }
   }
 
-  // Check if the Escape key is pressed
-  if (keyCode === "Escape") {
-    console.log("esc pressed");
-    closePopup(popup);
-    closePopup(notifPopup);
-    if (lastOpenedMenu) {
-      lastOpenedMenu.focus();
-    }
-  } else if (keyCode === 'Home') {//check if the Home key is pressed
-    if (menuItems.length > 0) {
-      menuItems[0].focus();
-    }
 
-    // Check if the End key is pressed
-  } else if (keyCode === 'End') {
-    if (menuItems.length > 0) {
-      menuItems[menuItems.length - 1].focus();
-    }
-  }
-  else if (keyCode.length === 1) {
-    // Convert the typed character to lowercase for case-insensitive comparison
-    const typedChar = keyCode.toLowerCase();
-
-    // Find the next menu item whose name starts with the typed character
-    const currentIndex = Array.from(menuItems).findIndex(item => item.innerText.trim().toLowerCase().startsWith(typedChar));
-
-    if (currentIndex !== -1) {
-      menuItems[currentIndex].focus();
-    }
-  }
 });
 
 //close or open popup
@@ -110,7 +96,7 @@ const closePopup = (popup) => {
   console.log(popup);
 };
 
-//keyboad accessibility within the menu
+//keyboard accessibility within the menu
 const handleKeyPress = (e, index) => {
   const isFirstItem = index === 1;
   const isLastItem = index === menuItems.length - 1;
@@ -135,6 +121,56 @@ const handleKeyPress = (e, index) => {
       prevItem = menuItems.item(index - 2);
     }
     prevItem.focus();
+  } else if (e.key === "Escape") {
+    console.log("esc pressed");
+    closePopup(popup);
+    closePopup(notifPopup);
+    if (lastOpenedMenu) {
+      lastOpenedMenu.focus();
+    }
+  } else if (e.key === 'Home') {//check if the Home key is pressed
+    if (menuItems.length > 0) {
+      menuItems[1].focus();
+      console.log("hOME");
+    }
+
+    // Check if the End key is pressed
+  } else if (e.key === 'End') {
+    if (menuItems.length > 0) {
+      menuItems[menuItems.length - 1].focus();
+      console.log('END');
+    }
+  }
+  else if (e.key.length === 1) {
+    // Convert the typed character to lowercase for case-insensitive comparison
+    const typedChar = e.key.toLowerCase();
+
+    // Find the next menu item whose name starts with the typed character
+    const currentIndex = Array.from(menuItems).findIndex(item => item.innerText.trim().toLowerCase().startsWith(typedChar));
+
+    if (currentIndex !== -1) {
+      menuItems[currentIndex].focus();
+    }
+  }
+  else if (e.key == "Tab") {
+    menuItems.forEach((menuItem, index) => {
+      menuItem.addEventListener('focus', () => {
+        // Check if the focused element is at index 9
+        isElementAtIndex9Focused = index === 9;
+
+        // Toggle the popup if the focused element is at index 9
+        if (isElementAtIndex9Focused) {
+          menuItem.addEventListener('blur', function () {
+            // Reset the flag when the element loses focus
+            closePopup(popup);
+            profile.setAttribute("aria-expanded", 'false');
+          });
+        }
+      });
+
+
+    });
+
   }
 }
 
@@ -211,7 +247,7 @@ accordion.forEach(accord => {
               accord.setAttribute("aria-expanded", 'true')
               accord.parentNode.parentNode.parentNode.classList.add("list__active");
               accord.parentNode.parentNode.parentNode.classList.remove("accord_list_list");
-              console.log('up arrow');
+
               return;
             }
           })
@@ -235,6 +271,7 @@ accordion.forEach(accord => {
         accordion[0].focus();
         e.preventDefault(); // Prevent the page from scrolling
         break;
+
       default:
         break;
     }
@@ -266,7 +303,7 @@ dropDownIcon.addEventListener("click", () => {
 //OPEN/CLOSE MAIN ACCORDION FOR KEYBOARD
 dropDownIcon.addEventListener("keyup", (e) => {
   const keyCode = e.key;
-
+  console.log(keyCode);
   if (keyCode === 'Enter' || keyCode === ' ') {
     dropDownIcon.classList.toggle("accord_drop_active")
     dropDownContent.classList.toggle("accord_list_active");
@@ -275,6 +312,17 @@ dropDownIcon.addEventListener("keyup", (e) => {
     } else {
       dropDownIcon.ariaExpanded = 'false';
     }
+  }
+  if (keyCode === 'ArrowUp') {
+    console.log('uppp');
+    dropDownIcon.classList.toggle("accord_drop_active")
+    dropDownContent.classList.toggle("accord_list_active");
+    dropDownIcon.ariaExpanded = 'false';
+  } else if (keyCode == 'ArrowDown') {
+    console.log('downnn');
+    dropDownIcon.classList.toggle("accord_drop_active")
+    dropDownContent.classList.toggle("accord_list_active");
+    dropDownIcon.ariaExpanded = 'true';
   }
 })
 
@@ -379,6 +427,7 @@ checkIcon.forEach((check, i) => {
     }
 
     //SET AN ITEM AS CHECKED
+    let checkboxTextContent;
     const handleDoneCheck = () => {
       uncompletedCheck.forEach(chec => {
         if (chec.parentNode == check) {
@@ -402,6 +451,8 @@ checkIcon.forEach((check, i) => {
         completedCheck.forEach(chec => {
           if (chec.parentNode == check) {
             chec.classList.remove("check-hidden");
+            checkboxTextContent = chec.parentElement.nextElementSibling.firstElementChild.textContent;
+            console.log(chec.parentElement.nextElementSibling.firstElementChild.textContent);
           }
         })
         check.classList.add("done-check");
@@ -410,7 +461,7 @@ checkIcon.forEach((check, i) => {
         checkForProgressBar();
         updateProgress();
         checkIfButtonIsNotChecked();
-        shoppingStatus.ariaLabel = "Successfully marked customize your online store as done"
+        shoppingStatus.ariaLabel = `Successfully marked ${checkboxTextContent} as done`
       }, 1000)
     }
 
@@ -432,6 +483,7 @@ checkIcon.forEach((check, i) => {
         loadingCheck.forEach(chec => {
           if (chec.parentNode == check) {
             chec.classList.add("check-hidden");
+            checkboxTextContent = chec.parentElement.nextElementSibling.firstElementChild.textContent;
           }
         })
         uncompletedCheck.forEach(chec => {
@@ -445,7 +497,7 @@ checkIcon.forEach((check, i) => {
         checkForProgressBar();
         updateProgress();
         checkIfButtonIsNotChecked();
-        shoppingStatus.ariaLabel = "Successfully marked customize your online store as not done"
+        shoppingStatus.ariaLabel = `Successfully marked ${checkboxTextContent} as not done`
       }, 1000)
     }
 

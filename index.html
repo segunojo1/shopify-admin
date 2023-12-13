@@ -7,6 +7,7 @@
   <title>Shopify Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="shortcut icon" href="https://crushingit.tech/hackathon-assets/shopify-icon.svg" type="image/x-icon">
   <meta name="description" content="Shopify admin setup guide">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./app.css" />
@@ -31,8 +32,8 @@
     </div>
     <div class="right_nav">
       <div role="button" tabindex="0" aria-label="Notifications" class="notif">
-        <svg width="41" height="40" viewBox="0 0 21 20" fill="none" aria-haspopup="true" aria-expanded="false"
-          aria-controls="notif_menu" xmlns="http://www.w3.org/2000/svg">
+        <svg width="41" height="40" viewBox="0 0 21 20" fill="none" aria-expanded="false" aria-controls="notif_menu"
+          xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" clip-rule="evenodd"
             d="M7.75203 14.4239L5.3061 14.1427C3.45144 13.9295 2.92542 11.4844 4.52838 10.5274L4.5933 10.4886C5.466 9.96761 6.00045 9.02609 6.00045 8.00969V7.5C6.00045 5.01472 8.01517 3 10.5005 3C12.9857 3 15.0005 5.01472 15.0005 7.5V8.00969C15.0005 9.02609 15.5349 9.96761 16.4076 10.4886L16.4725 10.5274C18.0755 11.4844 17.5495 13.9295 15.6948 14.1427L13.152 14.435V14.8C13.152 16.2912 11.9432 17.5 10.452 17.5C8.96086 17.5 7.75203 16.2912 7.75203 14.8V14.4239ZM11.652 14.5H9.25203V14.8C9.25203 15.4627 9.78929 16 10.452 16C11.1148 16 11.652 15.4627 11.652 14.8V14.5ZM8.50045 13H12.5005L15.5235 12.6525C15.953 12.6032 16.0748 12.0369 15.7036 11.8153L15.6387 11.7766C15.5591 11.7291 15.4815 11.6793 15.4057 11.6273C15.2506 11.521 15.1036 11.4055 14.9651 11.2818C14.9405 11.2598 14.9162 11.2377 14.8922 11.2152C14.0144 10.395 13.5005 9.23833 13.5005 8.00969V7.5C13.5005 5.84315 12.1573 4.5 10.5005 4.5C8.8436 4.5 7.50045 5.84315 7.50045 7.5V8.00969C7.50045 9.23833 6.98651 10.395 6.10871 11.2152C6.08469 11.2377 6.06039 11.2598 6.03583 11.2818C5.89734 11.4055 5.75029 11.521 5.59523 11.6273C5.51945 11.6793 5.44176 11.7291 5.36222 11.7766L5.29729 11.8153C4.9261 12.0369 5.0479 12.6032 5.47739 12.6525L8.50045 13Z"
             fill="#fff" />
@@ -133,6 +134,7 @@
       <p>Extend your trial for $1/month for 3 months on select plans.</p>
       <div class="plan__2">
         <a href="https://shopify.com/pricing" class="plan_btn">Select a plan</a>
+
         <div tabindex="0" role="button" aria-label="dismiss" class="close_btn_div">
           <svg class="close_btn" width="41" height="40" viewBox="0 0 21 20" fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -152,7 +154,7 @@
         <div>
           <p class="accord_head" id="accorcont">Setup guide</p>
           <p class="accord_p">Use this personalized guide to get your store up and running.</p>
-          <div class="accord_progress">
+          <div class="accord_progress" aria-label="Setup guide progress bar">
             <p>0 / 5 completed</p>
             <div class="progress_cont">
               <div class="main_progress"></div>
@@ -171,7 +173,7 @@
         </div>
 
       </div>
-      <ul class="accord_list " id="maindrop" aria-labelledby="accorcont">
+      <ul class="accord_list " id="maindrop">
         <li class="list__active lii">
           <div class="accord_l">
             <span aria-live="polite" id="shopping-status"></span>
@@ -196,12 +198,13 @@
               </svg>
             </button>
             <div class="accord_lii">
-              <p class="accord_title" id="check1" tabindex="0" role="button" aria-expanded="true" aria-haspopup="true">
+              <p class="accord_title" id="check1" tabindex="0" role="tab" aria-expanded="true">
                 Customize your online store</p>
               <p class="accord_text">Choose a theme and add your logo, colors, and images to reflect your brand. <br />
                 <span> <a
                     href="https://help.shopify.com/en/manual/intro-to-shopify/initial-setup/setup-business-settings#set-or-change-your-online-store-name-and-legal-business-name">Learn
-                    more</a></span></p>
+                    more</a></span>
+              </p>
               <button class="accord_btn">Customize theme</button>
             </div>
           </div>
@@ -211,7 +214,7 @@
         <li class="accord_list_list lii">
           <div class="accord_l">
             <span aria-live="polite" id="shopping-status"></span>
-            <button aria-label="Mark Customize your online store as done" class="accord_check">
+            <button aria-label="Mark Add your first product as done" class="accord_check">
               <svg aria-hidden="true" class="uncompleted-check" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" viewBox="0 0 32 32" fill="none">
                 <circle cx="16" cy="16" r="12" stroke="#8A8A8A" stroke-width="2.5" stroke-linecap="round"
@@ -232,7 +235,7 @@
               </svg>
             </button>
             <div class="accord_lii">
-              <p class="accord_title" id="check2" tabindex="0" role="button" aria-expanded="false" aria-haspopup="true">
+              <p class="accord_title" id="check2" tabindex="0" role="tab" aria-expanded="false">
                 Add your first product</p>
               <p class="accord_text">Write a description, add photos, and set pricing for the products you plan to
                 sell.<span> <a
@@ -249,7 +252,7 @@
         <li class="accord_list_list lii">
           <div class="accord_l">
             <span aria-live="polite" id="shopping-status"></span>
-            <button aria-label="Mark Customize your online store as done" class="accord_check">
+            <button aria-label="Mark Add a custom domain as done" class="accord_check">
               <svg aria-hidden="true" class="uncompleted-check" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" viewBox="0 0 32 32" fill="none">
                 <circle cx="16" cy="16" r="12" stroke="#8A8A8A" stroke-width="2.5" stroke-linecap="round"
@@ -270,7 +273,7 @@
               </svg>
             </button>
             <div class="accord_lii">
-              <p class="accord_title" id="check3" tabindex="0" role="button" aria-expanded="false" aria-haspopup="true">
+              <p class="accord_title" id="check3" tabindex="0" role="tab" aria-expanded="false">
                 Add a custom domain</p>
               <p class="accord_text">Your current domain is 222219.myshopify.com but you can add a custom domain to help
                 customers find your online store. <span> <a
@@ -284,7 +287,7 @@
         <li class="accord_list_list lii">
           <div class="accord_l">
             <span aria-live="polite" id="shopping-status"></span>
-            <button aria-label="Mark Customize your online store as done" class="accord_check">
+            <button aria-label="Mark Name your store as done" class="accord_check">
               <svg aria-hidden="true" class="uncompleted-check" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" viewBox="0 0 32 32" fill="none">
                 <circle cx="16" cy="16" r="12" stroke="#8A8A8A" stroke-width="2.5" stroke-linecap="round"
@@ -305,7 +308,7 @@
               </svg>
             </button>
             <div class="accord_lii">
-              <p class="accord_title" id="check4" tabindex="0" role="button" aria-expanded="false" aria-haspopup="true">
+              <p class="accord_title" id="check4" tabindex="0" role="tab" aria-expanded="false">
                 Name your store</p>
               <p class="accord_text">Your temporary store name is currently Davii collections. The store name appears in
                 your admin and your online store. <span> <a
@@ -319,7 +322,7 @@
         <li class="accord_list_list lii">
           <div class="accord_l">
             <span aria-live="polite" id="shopping-status"></span>
-            <button aria-label="Mark Customize your online store as done" class="accord_check">
+            <button aria-label="Mark Set up a payment provider as done" class="accord_check">
               <svg aria-hidden="true" class="uncompleted-check" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" viewBox="0 0 32 32" fill="none">
                 <circle cx="16" cy="16" r="12" stroke="#8A8A8A" stroke-width="2.5" stroke-linecap="round"
@@ -340,7 +343,7 @@
               </svg>
             </button>
             <div class="accord_lii">
-              <p class="accord_title" id="check5" tabindex="0" role="button" aria-expanded="false" aria-haspopup="true">
+              <p class="accord_title" id="check5" tabindex="0" role="tab" aria-expanded="false">
                 Set up a payment provider</p>
               <p class="accord_text">Choose a payment provider to start accepting payments. You’ll need to create an
                 account with the payment provider and set it up with your Shopify store. <span> <a
